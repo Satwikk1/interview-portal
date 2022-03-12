@@ -1,25 +1,16 @@
-import logo from './logo.svg';
-import './App.css';
+import './app.css';
+import Home from './components/home/Home.js';
+import Create from './components/create/Create.js';
+import Schedule from './components/schedule/Schedule.js';
+
+let adminID = 1;
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    return ( 
+        <div className='App'>
+            <Home adminID={adminID} />
+        </div>
+     );
 }
 
 export default App;
