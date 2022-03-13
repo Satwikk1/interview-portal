@@ -1,15 +1,22 @@
 import React, {useEffect, useState} from 'react';
+
+import Home from './components/home/Home.js';
 import Schedule from './components/schedule/Schedule.js';
 import Create from './components/create/Create.js';
 import Header from './components/header/Header.js';
-import Home from './components/home/Home.js';
 import Navigation from './components/navigation/Navigation.js';
+import Participants from './components/participants/Participants.js';
+
 import './app.css';
 import {
-    getScheduledInterviews,
     binarySearch,
-    getAdminDetails
-} from './utils.js'
+    getAdminDetails,
+    getParticipants,
+    getScheduledInterviews,
+} from './utils.js';
+// dummy data
+import data from './data.js';
+
 
 let adminID = 1;
 var loaderHtml = (<div id="loader"></div>);
@@ -24,8 +31,8 @@ function App() {
         const [navFrame, setNavFrame] = useState({
             addParticipant: false,
             newSchedule: false,
-            allSchedules: false,
-            allParticipants: true
+            allSchedules: true,
+            allParticipants: false
         })
 
         // effect
@@ -43,7 +50,29 @@ function App() {
             <div className='App'>
                 {detailLoader?loaderHtml:<Header adminName={adminDetails.name}/>}
                 {detailLoader?<div></div>:<Navigation frame = {navFrame} setFrame = {setNavFrame} />}
-                {interviewCardLoader?loaderHtml:<Home scheduledInterviews={scheduledInterviews} />}
+                {interviewCardLoader?
+                    loaderHtml
+                    :
+                    navFrame.allSchedules?
+                        <Home scheduledInterviews={scheduledInterviews} />
+                        :
+                        null
+                }
+                {navFrame.allParticipants?
+                    <Participants getParticipants={getParticipants} />
+                    :
+                    null
+                }
+                {navFrame.addParticipant?
+                    <Create getParticipants={getParticipants} />
+                    :
+                    null
+                }
+                {navFrame.newSchedule?
+                    <Schedule />
+                    :
+                    null
+                }
             </div>
         );
 }

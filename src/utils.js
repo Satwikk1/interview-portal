@@ -10,6 +10,11 @@ function getAdminDetails(id){
     return admin;
 }
 
+function getParticipants(){
+    let data = JSON.parse(localStorage.getItem('participant'));
+    return data;
+}
+
 // binary search -> bool
 function binarySearch(arr, x){
     let start=0, end=arr.length-1;
@@ -36,7 +41,8 @@ function getScheduledInterviews(id){
 }
 
 export {
-    getScheduledInterviews,
     binarySearch,
-    getAdminDetails
+    getParticipants,
+    getAdminDetails,
+    getScheduledInterviews,
 }

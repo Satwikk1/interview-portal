@@ -87,9 +87,9 @@ var data = {
         2,
         3
       ],
-      date: "date",
-      startTime: "st",
-      endTime: "et"
+      date: "14-03-2022",
+      startTime: "15:30:00",
+      endTime: "16:00:00"
     },
     {
       id: 2,
@@ -97,9 +97,9 @@ var data = {
       intervieweeID: [
         1
       ],
-      date: "date",
-      startTime: "st",
-      endTime: "et"
+      date: "28-03-2022",
+      startTime: "14:30:00",
+      endTime: "15:00:00"
     },
     {
       id: 3,
@@ -109,9 +109,9 @@ var data = {
         3,
         4
       ],
-      date: "date",
-      startTime: "st",
-      endTime: "et"
+      date: "25-03-2022",
+      startTime: "13:30:00",
+      endTime: "14:00:00"
     },
     {
       id: 4,
@@ -121,9 +121,9 @@ var data = {
         3,
         7
       ],
-      date: "date",
-      startTime: "st",
-      endTime: "et"
+      date: "23-03-2022",
+      startTime: "12:30:00",
+      endTime: "13:00:00"
     },
     {
       id: 5,
@@ -131,9 +131,9 @@ var data = {
       intervieweeID: [
         3
       ],
-      date: "date",
-      startTime: "st",
-      endTime: "et"
+      date: "22-03-2022",
+      startTime: "11:30:00",
+      endTime: "12:00:00"
     },
     {
       id: 6,
@@ -142,9 +142,9 @@ var data = {
         5,
         6
       ],
-      date: "date",
-      startTime: "st",
-      endTime: "et"
+      date: "19-03-2022",
+      startTime: "10:30:00",
+      endTime: "11:00:00"
     }
   ],
   resume: [
