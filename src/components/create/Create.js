@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import {toast} from 'react-toastify';
 import './create.scss';
  
 
@@ -6,20 +7,44 @@ function Create(props) {
 
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
-    const [file, setFile] = useState('');
+    // const [file, setFile] = useState('');
+
+    function validate(name, email){
+        if(name===''){
+            toast.warn("name filed is empty!");
+            return;
+        }
+        if(email===''){
+            toast.warn("email filed is empty!");
+            return;
+        }
+        let at = false;
+        let dot = false;
+        for(let i=0; i<email.length; i++){
+            if(email[i]==='@') at=true;
+            if(email[i]==='.') dot=true;
+        }
+        if(!at || !dot){
+            toast.warn('email format is not corrent!');
+            return;
+        }
+    }
 
     function handleSubmit(e){
         e.preventDefault();
-        props.saveParticipant(name, email);
-        setEmail('')
-        setName('');
+        let check = validate(name, email);
+        if(check){
+            props.saveParticipant(name, email);
+            setEmail('')
+            setName('');
 
-        var frame = {};
-        for (const [key, value] of Object.entries(props.navFrame)) {
-            frame[key] = false
+            var frame = {};
+            for (const [key, value] of Object.entries(props.navFrame)) {
+                frame[key] = false
+            }
+            frame.allParticipants = true;
+            props.setNavFrame(frame);
         }
-        frame.allParticipants = true;
-        props.setNavFrame(frame);
     }
 
     return (

@@ -9,23 +9,38 @@ const loaderHTML = <div className="loader"></div>
 function Schedule(props) {
     
     // states
-    const [participants, setParticipants] = useState();
-    const [loaded, setLoaded] = useState(false);
     const [selectedParticipants, setSelectedParticipants] = useState([]);
+    const [participants, setParticipants] = useState();
+    const [update, setUpdate] = useState(false);
+    const [loaded, setLoaded] = useState(false);
+    const [updateID, setUpdateID] = useState();
     const [date, setDate] = useState('');
     const [st, setSt] = useState('');
     const [et, setEt] = useState('');
-    const [update, setUpdate] = useState(false);
-    const [updateID, setUpdateID] = useState();
 
 
     
     function validateSubmit(){
         // validate number of participants
+        if(date===''){
+            toast.warn('date field is empty!');
+            return;
+        }if(st===''){
+            toast.warn('start time field is empty!');
+            return;
+        }if(et===''){
+            toast.warn('end time filed is empty!');
+            return;
+        }
         if(selectedParticipants.length>=2){
             let selected_date = date_module.parse(date, 'YYYY-MM-DD');
             let selected_st = date_module.parse(st, 'h:m:s');
             let selected_et = date_module.parse(et, 'h:m:s');
+
+            if(date_module.subtract(new Date(), selected_date).toDays()>=0){
+                toast.warn('you have selected past date!');
+                return;
+            }
 
             let hasCollasped = [];
 
