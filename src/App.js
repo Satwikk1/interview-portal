@@ -10,7 +10,7 @@ import Participants from './components/participants/Participants.js';
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer } from 'react-toastify';
 
-import './app.css';
+// import './app.css';
 import {
     binarySearch,
     isSlotOverlap,
