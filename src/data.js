@@ -3,7 +3,7 @@ var data = {
     {
       id: 1,
       name: "dummy1",
-      email: "dummy1@mail.com",
+      email: "satviksingh35@gmail.com",
       interviewID: [
         1,
         2
@@ -12,7 +12,7 @@ var data = {
     {
       id: 2,
       name: "dummy2",
-      email: "dummy2@mail.com",
+      email: "satviksingh35@gmail.com",
       interviewID: [
         1,
         3,
@@ -22,7 +22,7 @@ var data = {
     {
       id: 3,
       name: "dummy3",
-      email: "dummy3@mail.com",
+      email: "satviksingh35@gmail.com",
       interviewID: [
         1,
         3,
@@ -33,7 +33,7 @@ var data = {
     {
       id: 4,
       name: "dummy4",
-      email: "dummy4@mail.com",
+      email: "satviksingh35@gmail.com",
       interviewID: [
         3
       ]
@@ -41,7 +41,7 @@ var data = {
     {
       id: 5,
       name: "dummy5",
-      email: "dummy5@mail.com",
+      email: "satviksingh35@gmail.com",
       interviewID: [
         6
       ]
@@ -49,7 +49,7 @@ var data = {
     {
       id: 6,
       name: "dummy6",
-      email: "dummy6@mail.com",
+      email: "satviksingh35@gmail.com",
       interviewID: [
         6
       ]
@@ -57,7 +57,7 @@ var data = {
     {
       id: 7,
       name: "dummy7",
-      email: "dummy7@mail.com",
+      email: "satviksingh35@gmail.com",
       interviewID: [
         4
       ]

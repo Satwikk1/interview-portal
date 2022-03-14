@@ -11,11 +11,13 @@ import './app.css';
 import {
     binarySearch,
     isSlotOverlap,
+    updateSchedule,
     getAdminDetails,
     getParticipants,
     saveNewSchedule,
     getAllInterviews,
     isSlotsCollasping,
+    getInterveiwWithID,
     getScheduledInterviews,
 } from './utils.js';
 // dummy data
@@ -38,6 +40,8 @@ function App() {
             allSchedules: true,
             allParticipants: false
         })
+        const [onEdit, setOnEdit] = useState();
+        const [onEditId, setOnEditId] = useState();
 
         function reloadInterviews(){
             let interviews = getScheduledInterviews(adminID);
@@ -47,6 +51,9 @@ function App() {
         // effect
         useEffect(() => {
             // localStorage.setItem('interview', JSON.stringify(data.interview))
+            // localStorage.setItem('admin', JSON.stringify(data.admin))
+            // localStorage.setItem('participant', JSON.stringify(data.participant))
+            // localStorage.setItem('resume', JSON.stringify(data.resume))
             let details = getAdminDetails(adminID);
             setAdminDetails(details);
             setDetailLoader(!detailLoader);
@@ -69,7 +76,7 @@ function App() {
                     loaderHtml
                     :
                     navFrame.allSchedules?
-                        <Home scheduledInterviews={scheduledInterviews} />
+                        <Home setOnEdit={setOnEdit} setOnEditId={setOnEditId} navFrame={navFrame} setNavFrame={setNavFrame} scheduledInterviews={scheduledInterviews} />
                         :
                         null
                 }
@@ -85,16 +92,22 @@ function App() {
                 }
                 {navFrame.newSchedule?
                     <Schedule 
+                        onEdit={onEdit}
                         adminID={adminID}
+                        onEditId={onEditId}
                         navFrame={navFrame}
+                        setOnEdit={setOnEdit}
+                        setOnEditId={setOnEditId}
                         setNavFrame={setNavFrame}
                         binarySearch={binarySearch} 
                         isSlotOverlap={isSlotOverlap} 
+                        updateSchedule={updateSchedule}
                         getParticipants={getParticipants} 
                         saveNewSchedule={saveNewSchedule} 
                         reloadInterviews={reloadInterviews}
                         getAllInterviews={getAllInterviews} 
                         isSlotsCollasping={isSlotsCollasping} 
+                        getInterveiwWithID={getInterveiwWithID}
                     />
                     :
                     null

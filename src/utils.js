@@ -1,4 +1,7 @@
 import {default as date_module} from 'date-and-time';
+import emailjs from '@emailjs/browser';
+import{ init } from '@emailjs/browser';
+init("user_TgsJoAAXIf4bThefY3KyB");
 
 function getAdminDetails(id){
     let data = JSON.parse(localStorage.getItem('admin'));
@@ -59,6 +62,10 @@ function isSlotOverlap(st1, st2, et1, et2){
     return (
         (s1==s2 && e1==e2)
         ||
+        (s1>=s2 && e1<=e2)
+        ||
+        (s1<=s2 && e1>=e2)
+        ||
         (s1>=s2 && s1<e2)
         ||
         (e1>s1 && e1<=e2)
@@ -81,10 +88,16 @@ function getPatricipantWithID(id){
     }
 }
 
-function isSlotsCollasping(id, date, st, et){
+function isSlotsCollasping(id, date, st, et, update, updateID){
     let ids = getPatricipantWithID(id);
     for(let i=0;i<ids.interviewID.length; i++){
         let id = ids.interviewID[i];
+
+        // skip currently updating interview
+        if(update){
+            if(updateID==id) return false;
+        }
+
         let itm = getInterveiwWithID(id);
         let itm_date = date_module.parse(itm.date, 'DD-MM-YYYY');
         let itm_st = date_module.parse(itm.startTime, 'h:m:s');
@@ -99,7 +112,23 @@ function isSlotsCollasping(id, date, st, et){
     }
 }
 
-function sendEmail(obj){
+function sendMail(mail, date, st, et){
+    let form = {
+        to: mail,
+        date: date,
+        st: st,
+        et: et
+    }
+    emailjs.sendForm('service_8pxbrw8', 'template_9c9lqw3', form, 'user_TgsJoAAXIf4bThefY3KyB')
+      .then((result) => {
+          console.log(result.text);
+      }, (error) => {
+          console.log(error.text);
+      });
+}
+// sendMail('satviksingh35@gmail.com', '12-3-2022', '3:30 pm', '5:00 pm');
+
+function getEmail(obj){
     let participant = getParticipants();
     let selected = obj.intervieweeID;
     let emails = []
@@ -108,7 +137,10 @@ function sendEmail(obj){
             if(itm.id==selected[i]) return emails.push(itm.email);
         }
     })
-    console.log(emails);
+
+    emails.forEach(itm=>{
+
+    })
 }
 
 function saveNewSchedule(obj){
@@ -117,16 +149,32 @@ function saveNewSchedule(obj){
     obj.date = date_module.transform(obj.date, 'YYYY-MM-DD', 'DD-MM-YYYY');
     interviews.push(obj);
     localStorage.setItem('interview', JSON.stringify(interviews));
-    sendEmail(obj);
+    getEmail(obj);
+}
+
+function updateSchedule(updateID, obj){
+    let interviews = getAllInterviews();
+    obj.id = updateID;
+    obj.date = date_module.transform(obj.date, 'YYYY-MM-DD', 'DD-MM-YYYY');
+    for(let i=0;i<interviews.length;i++){
+        let id = interviews[i].id;
+        if(id==updateID){
+            interviews[i]=obj;
+            break;
+        }
+    }
+    localStorage.setItem('interview', JSON.stringify(interviews));
 }
 
 export {
     binarySearch,
     isSlotOverlap,
+    updateSchedule,
     getParticipants,
     saveNewSchedule,
     getAdminDetails,
     getAllInterviews,
     isSlotsCollasping,
+    getInterveiwWithID,
     getScheduledInterviews,
 }

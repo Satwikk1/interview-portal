@@ -14,6 +14,9 @@ function Schedule(props) {
     const [date, setDate] = useState('');
     const [st, setSt] = useState('');
     const [et, setEt] = useState('');
+    const [update, setUpdate] = useState(false);
+    const [updateID, setUpdateID] = useState();
+    const [onEditSelectedCandidates, setOnEditSelectedCandidates] = useState([]);
 
 
     
@@ -28,14 +31,25 @@ function Schedule(props) {
 
             // check is participant is available at selected date and time
             let flag = true; // save to database if flag is true
+
+
+
             for(let i=0; i<selectedParticipants.length; i++){
                 let itm = selectedParticipants[i];
-                let check = props.isSlotsCollasping(itm, selected_date, selected_st, selected_et)
+                let check;
+                if(update){
+                    check = props.isSlotsCollasping(itm, selected_date, selected_st, selected_et, true, updateID);
+                }else{
+                    check = props.isSlotsCollasping(itm, selected_date, selected_st, selected_et, false, -1)
+                }
                 if(check){
                     hasCollasped.push(itm);
                     flag = false;
                 }
             }
+
+
+
             if(flag){
                 let obj = {
                     interviwerID: props.adminID,
@@ -52,11 +66,16 @@ function Schedule(props) {
                 frame.allSchedules = true;
 
                 props.setNavFrame(frame);
-                props.saveNewSchedule(obj);
+                if(update){
+                    props.updateSchedule(updateID, obj);
+                }else{
+                    props.saveNewSchedule(obj);
+                }
                 props.reloadInterviews();
 
             }else{
                 // todo: display collasped participants
+                alert('collaspe')
             }
         }else{
             alert('number of participants is less than 2');
@@ -65,6 +84,7 @@ function Schedule(props) {
 
     function handleSubmit(){
         validateSubmit();
+        // console.log(selectedParticipants, date, st, et, update, props.onEditId, updateID);
     }
 
     function addSelectedParticipant(e, id){
@@ -89,11 +109,18 @@ function Schedule(props) {
         setSelectedParticipants(selected);
     }
     
-    function createListItem(item){
+    function createListItem(item, state){
         return (
             <tr key={item.id}>
                 <th scope="row">{item.id}</th>
-                <td><input onChange={(e)=>{addSelectedParticipant(e, item.id)}} type="checkbox" name="name1" />&nbsp;</td>
+                <td>
+                    {
+                        state?
+                        <input checked={true} onChange={(e)=>{addSelectedParticipant(e, item.id)}} type="checkbox" name="name1" />
+                        :
+                        <input checked={false} onChange={(e)=>{addSelectedParticipant(e, item.id)}} type="checkbox" name="name1" />
+                    }
+                </td>
                 <td>{item.name}</td>
                 <td>{item.email}</td>
             </tr>
@@ -102,9 +129,30 @@ function Schedule(props) {
     
     
     useEffect(()=>{
+
         let participants = props.getParticipants();
         setParticipants(participants);
         setLoaded(!loaded);
+        
+        if(props.onEdit){
+            let interview = props.getInterveiwWithID(props.onEditId);
+            setDate(date_module.transform(interview.date,'DD-MM-YYYY','YYYY-MM-DD'));
+            setSt(interview.startTime);
+            setEt(interview.endTime);
+            setSelectedParticipants(interview.intervieweeID);
+            props.setOnEdit(!props.onEdit);
+            setUpdateID(props.onEditId);
+            props.setOnEditId(null);
+            setUpdate(true);
+        }
+        
+        // return () => {
+        //     setDate('');
+        //     setSt('');
+        //     setEt('');
+        //     setSelectedParticipants([])
+        // }
+
     }, [])
 
     return ( 
@@ -135,8 +183,18 @@ function Schedule(props) {
                             </tr>
                         </thead>
                         <tbody>
-                            {participants.map((itm)=>{
-                                return createListItem(itm);
+                            {participants.map(itm=>{
+                                let state = false;
+                                for(let i=0;i<selectedParticipants.length; i++){
+                                    let id = selectedParticipants[i];
+                                    if(itm.id==id){
+                                        state = true;
+                                        return createListItem(itm, true);
+                                    }
+                                }
+                                if(state==false){
+                                    return createListItem(itm, false);
+                                }
                             })}
                         </tbody>
                     </table>

@@ -2,9 +2,21 @@ import React, { useEffect, useState } from "react";
 import date from 'date-and-time';
 import './home.scss';
 
+function handleEdit(id, props){
+
+    var frame = {};
+    for (const [key, value] of Object.entries(props.navFrame)) {
+        frame[key] = false
+    }
+    frame.newSchedule = true;
+    props.setNavFrame(frame);
 
 
-function createCard(interview){
+    props.setOnEditId(id);
+    props.setOnEdit(true);
+}
+
+function createCard(interview, props){
 
     const pattern = date.compile('ddd, MMM DD');
     const time_pattern = date.compile('hh:mm A');
@@ -26,6 +38,9 @@ function createCard(interview){
             </div>
             <div className="card-footer">
                 <small className="text-muted">Participants: {interview.intervieweeID.length}</small>
+                <button onClick={(e)=>{
+                    handleEdit(interview.id, props)
+                }} className="btn btn-outline-secondary">edit</button>
             </div>
         </div>
     )
@@ -37,7 +52,7 @@ function Home(props) {
     return ( 
         <div id="home-container">
             <div className="card-columns">
-                {props.scheduledInterviews.map((itm)=>{return createCard(itm)})}
+                {props.scheduledInterviews.map((itm)=>{return createCard(itm, props)})}
             </div>  
         </div>
      );
