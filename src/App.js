@@ -14,6 +14,7 @@ import {
     updateSchedule,
     getAdminDetails,
     getParticipants,
+    saveParticipant,
     saveNewSchedule,
     getAllInterviews,
     isSlotsCollasping,
@@ -50,10 +51,19 @@ function App() {
 
         // effect
         useEffect(() => {
-            // localStorage.setItem('interview', JSON.stringify(data.interview))
-            // localStorage.setItem('admin', JSON.stringify(data.admin))
-            // localStorage.setItem('participant', JSON.stringify(data.participant))
-            // localStorage.setItem('resume', JSON.stringify(data.resume))
+            if(localStorage.getItem('interview')===null){
+                localStorage.setItem('interview', JSON.stringify(data.interview))
+            }
+            if(localStorage.getItem('admin')===null){
+                localStorage.setItem('admin', JSON.stringify(data.admin))
+            }
+            if(localStorage.getItem('participant')===null){
+                localStorage.setItem('participant', JSON.stringify(data.participant))
+            }
+            if(localStorage.getItem('resume')===null){
+                localStorage.setItem('resume', JSON.stringify(data.resume))
+            }
+
             let details = getAdminDetails(adminID);
             setAdminDetails(details);
             setDetailLoader(!detailLoader);
@@ -63,8 +73,8 @@ function App() {
             setInterviewCardLoader(!interviewCardLoader);
 
             // print dummy data
-            console.log(JSON.parse(localStorage.getItem('interview')));
-            console.log(JSON.parse(localStorage.getItem('participant')));
+            // console.log(JSON.parse(localStorage.getItem('interview')));
+            // console.log(JSON.parse(localStorage.getItem('participant')));
             
         }, []);
 
@@ -76,7 +86,13 @@ function App() {
                     loaderHtml
                     :
                     navFrame.allSchedules?
-                        <Home setOnEdit={setOnEdit} setOnEditId={setOnEditId} navFrame={navFrame} setNavFrame={setNavFrame} scheduledInterviews={scheduledInterviews} />
+                        <Home 
+                            setOnEdit={setOnEdit} 
+                            setOnEditId={setOnEditId} 
+                            navFrame={navFrame} 
+                            setNavFrame={setNavFrame} 
+                            scheduledInterviews={scheduledInterviews} 
+                        />
                         :
                         null
                 }
@@ -86,7 +102,12 @@ function App() {
                     null
                 }
                 {navFrame.addParticipant?
-                    <Create getParticipants={getParticipants} />
+                    <Create 
+                        navFrame={navFrame} 
+                        setNavFrame={setNavFrame} 
+                        saveParticipant={saveParticipant} 
+                        getParticipants={getParticipants} 
+                    />
                     :
                     null
                 }

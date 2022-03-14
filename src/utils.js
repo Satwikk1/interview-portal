@@ -174,10 +174,23 @@ function updateSchedule(updateID, obj){
     localStorage.setItem('interview', JSON.stringify(interviews));
 }
 
+function saveParticipant(name, email){
+    let participants = getParticipants();
+    participants.push({
+        id: participants.length+1,
+        name: name,
+        email: email,
+        interviewID: []
+    })
+    localStorage.setItem('participant', JSON.stringify(participants));
+}
+
+
 export {
     binarySearch,
     isSlotOverlap,
     updateSchedule,
+    saveParticipant,
     getParticipants,
     saveNewSchedule,
     getAdminDetails,

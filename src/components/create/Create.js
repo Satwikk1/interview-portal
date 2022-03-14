@@ -1,27 +1,45 @@
-import React from "react";
+import React, { useState } from "react";
 import './create.scss';
-
+ 
 
 function Create(props) {
 
-    return ( 
+    const [name, setName] = useState('');
+    const [email, setEmail] = useState('');
+    const [file, setFile] = useState('');
+
+    function handleSubmit(e){
+        e.preventDefault();
+        props.saveParticipant(name, email);
+        setEmail('')
+        setName('');
+
+        var frame = {};
+        for (const [key, value] of Object.entries(props.navFrame)) {
+            frame[key] = false
+        }
+        frame.allParticipants = true;
+        props.setNavFrame(frame);
+    }
+
+    return (
         <div>
 
             <form>
                 <div className="form-group">
                     <label for="name">Name</label>
-                    <input name="name" type="text" className="form-control" id="name" aria-describedby="nameHelp" placeholder="Enter name"/>
+                    <input value={name} onChange={(e)=>setName(e.target.value)} name="name" type="text" className="form-control" id="name" aria-describedby="nameHelp" placeholder="Enter name"/>
                 </div>
                 <div className="form-group">
                     <label for="exampleInputEmail1">Email address</label>
-                    <input name="email" type="email" className="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email"/>
+                    <input value={email} onChange={(e)=>setEmail(e.target.value)} name="email" type="email" className="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email"/>
                 </div>
-                <div className="form-group">
+                {/* <div className="form-group">
                     <label for="resume">Upload resume </label>
-                    <input name="resume" type="file" className="form-control" id="resume"/>
-                </div>
+                    <input value={file} onChange={(e)=>setFile(e.target.value)} name="resume" type="file" className="form-control" id="resume"/>
+                </div> */}
                 <div className="form-group">
-                    <button className="btn btn-primary">Submit</button>
+                    <button onClick={handleSubmit} className="btn btn-primary">Submit</button>
                 </div>
             </form>
 
