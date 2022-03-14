@@ -10,8 +10,12 @@ import Participants from './components/participants/Participants.js';
 import './app.css';
 import {
     binarySearch,
+    isSlotOverlap,
     getAdminDetails,
     getParticipants,
+    saveNewSchedule,
+    getAllInterviews,
+    isSlotsCollasping,
     getScheduledInterviews,
 } from './utils.js';
 // dummy data
@@ -35,8 +39,14 @@ function App() {
             allParticipants: false
         })
 
+        function reloadInterviews(){
+            let interviews = getScheduledInterviews(adminID);
+            setScheduledInterviews(interviews);
+        }
+
         // effect
         useEffect(() => {
+            // localStorage.setItem('interview', JSON.stringify(data.interview))
             let details = getAdminDetails(adminID);
             setAdminDetails(details);
             setDetailLoader(!detailLoader);
@@ -44,6 +54,11 @@ function App() {
             let interviews = getScheduledInterviews(adminID);
             setScheduledInterviews(interviews);
             setInterviewCardLoader(!interviewCardLoader);
+
+            // print dummy data
+            console.log(JSON.parse(localStorage.getItem('interview')));
+            console.log(JSON.parse(localStorage.getItem('participant')));
+            
         }, []);
 
         return ( 
@@ -69,7 +84,18 @@ function App() {
                     null
                 }
                 {navFrame.newSchedule?
-                    <Schedule />
+                    <Schedule 
+                        adminID={adminID}
+                        navFrame={navFrame}
+                        setNavFrame={setNavFrame}
+                        binarySearch={binarySearch} 
+                        isSlotOverlap={isSlotOverlap} 
+                        getParticipants={getParticipants} 
+                        saveNewSchedule={saveNewSchedule} 
+                        reloadInterviews={reloadInterviews}
+                        getAllInterviews={getAllInterviews} 
+                        isSlotsCollasping={isSlotsCollasping} 
+                    />
                     :
                     null
                 }

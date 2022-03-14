@@ -1,0 +1,20 @@
+#schedule-container{
+    margin: 2%;
+
+    .form-control{
+        margin: 3px 7px;
+    }
+    div{
+        display: flex;
+    }
+    .table{
+        margin: 2% 1%;
+        input{
+            zoom: 1.5;
+        }
+    }
+    #schedule-btn{
+        margin: 1% 0% 0% auto;
+        width: fit-content;
+    }
+}

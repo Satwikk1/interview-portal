@@ -1,10 +1,150 @@
-import React from "react";
-import './schedule.css';
+import React, { useEffect, useState } from "react";
+import './schedule.scss';
+import { binarySearch } from "../../utils";
+import {default as date_module} from 'date-and-time';
 
-function Schedule() {
+const loaderHTML = <div className="loader"></div>
+
+function Schedule(props) {
+    
+    // states
+    const [participants, setParticipants] = useState();
+    const [loaded, setLoaded] = useState(false);
+    const [selectedParticipants, setSelectedParticipants] = useState([]);
+    const [date, setDate] = useState('');
+    const [st, setSt] = useState('');
+    const [et, setEt] = useState('');
+
+
+    
+    function validateSubmit(){
+        // validate number of participants
+        if(selectedParticipants.length>=2){
+            let selected_date = date_module.parse(date, 'YYYY-MM-DD');
+            let selected_st = date_module.parse(st, 'h:m:s');
+            let selected_et = date_module.parse(et, 'h:m:s');
+
+            let hasCollasped = [];
+
+            // check is participant is available at selected date and time
+            let flag = true; // save to database if flag is true
+            for(let i=0; i<selectedParticipants.length; i++){
+                let itm = selectedParticipants[i];
+                let check = props.isSlotsCollasping(itm, selected_date, selected_st, selected_et)
+                if(check){
+                    hasCollasped.push(itm);
+                    flag = false;
+                }
+            }
+            if(flag){
+                let obj = {
+                    interviwerID: props.adminID,
+                    intervieweeID: selectedParticipants,
+                    date: date,
+                    startTime: st,
+                    endTime: et
+                }
+
+                let frame = {};
+                for (const [key, value] of Object.entries(props.navFrame)) {
+                    frame[key] = false
+                }
+                frame.allSchedules = true;
+
+                props.setNavFrame(frame);
+                props.saveNewSchedule(obj);
+                props.reloadInterviews();
+
+            }else{
+                // todo: display collasped participants
+            }
+        }else{
+            alert('number of participants is less than 2');
+        }
+    }
+
+    function handleSubmit(){
+        validateSubmit();
+    }
+
+    function addSelectedParticipant(e, id){
+        let selected = selectedParticipants.slice();
+        
+        let checkbox_status = e.target.checked;
+        if(checkbox_status){
+            if(!binarySearch(selected, id)){
+                selected.push(id);
+            }
+        }else{
+            if(binarySearch(selected, id)){
+                selected = selected.filter((itm)=>{
+                    if(itm!=id){
+                        return true;
+                    }
+                    return false;
+                })
+            }
+        }
+        selected.sort();
+        setSelectedParticipants(selected);
+    }
+    
+    function createListItem(item){
+        return (
+            <tr key={item.id}>
+                <th scope="row">{item.id}</th>
+                <td><input onChange={(e)=>{addSelectedParticipant(e, item.id)}} type="checkbox" name="name1" />&nbsp;</td>
+                <td>{item.name}</td>
+                <td>{item.email}</td>
+            </tr>
+        )
+    }
+    
+    
+    useEffect(()=>{
+        let participants = props.getParticipants();
+        setParticipants(participants);
+        setLoaded(!loaded);
+    }, [])
+
     return ( 
-        <div>
-            <h2>new schedule</h2>
+        <div id="schedule-container">
+            <div>
+                <label for="meet-date">Meeting Date</label>
+                <input value={date} onChange={(e)=>setDate(e.target.value)} id="meet-date" className="form-control" type={"date"} />
+
+                <label for="meet-st">Start time</label>
+                <input value={st} onChange={(e)=>setSt(e.target.value)} id="meet-st" className="form-control" type={"time"}/>
+
+                <label for="meet-et">End time</label>
+                <input value={et} onChange={(e)=>setEt(e.target.value)} id="meet-et" className="form-control" type={"time"}/>
+            </div>
+            <div id="schedule-btn">
+                <button onClick={handleSubmit} className="btn btn-primary">Schedule</button>
+            </div>
+            <div>
+                {
+                    loaded?
+                    <table className="table table-striped">
+                        <thead>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Add</th>
+                                <th scope="col">Name</th>
+                                <th scope="col">Email</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {participants.map((itm)=>{
+                                return createListItem(itm);
+                            })}
+                        </tbody>
+                    </table>
+                    :
+                    loaderHTML
+                }
+            </div>
+            
         </div>
      );
 }
