@@ -7,6 +7,9 @@ import Header from './components/header/Header.js';
 import Navigation from './components/navigation/Navigation.js';
 import Participants from './components/participants/Participants.js';
 
+import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer } from 'react-toastify';
+
 import './app.css';
 import {
     binarySearch,
@@ -75,7 +78,6 @@ function App() {
             // print dummy data
             // console.log(JSON.parse(localStorage.getItem('interview')));
             // console.log(JSON.parse(localStorage.getItem('participant')));
-            
         }, []);
 
         return ( 
@@ -133,6 +135,7 @@ function App() {
                     :
                     null
                 }
+                <ToastContainer />
             </div>
         );
 }

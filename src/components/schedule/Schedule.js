@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import './schedule.scss';
 import { binarySearch } from "../../utils";
 import {default as date_module} from 'date-and-time';
+import {toast} from 'react-toastify';
 
 const loaderHTML = <div className="loader"></div>
 
@@ -16,7 +17,6 @@ function Schedule(props) {
     const [et, setEt] = useState('');
     const [update, setUpdate] = useState(false);
     const [updateID, setUpdateID] = useState();
-    const [onEditSelectedCandidates, setOnEditSelectedCandidates] = useState([]);
 
 
     
@@ -74,11 +74,20 @@ function Schedule(props) {
                 props.reloadInterviews();
 
             }else{
-                // todo: display collasped participants
-                alert('collaspe')
+                let len=hasCollasped.length%6;
+                hasCollasped.sort();
+                for(let i=0;i<participants.length && len>=0; i++){
+                    if(binarySearch(hasCollasped, participants[i].id)){
+                        toast.warn(`${participants[i].name} has an interview collasping with the selected slot`, {
+                            position: toast.POSITION.BOTTOM_RIGHT,
+                            className: 'collaspe-toast'
+                        });
+                        len-=1;
+                    }
+                }
             }
         }else{
-            alert('number of participants is less than 2');
+            toast.warn('Number of Participants is less than 2');
         }
     }
 
@@ -98,7 +107,7 @@ function Schedule(props) {
         }else{
             if(binarySearch(selected, id)){
                 selected = selected.filter((itm)=>{
-                    if(itm!=id){
+                    if(itm!==id){
                         return true;
                     }
                     return false;
@@ -187,12 +196,12 @@ function Schedule(props) {
                                 let state = false;
                                 for(let i=0;i<selectedParticipants.length; i++){
                                     let id = selectedParticipants[i];
-                                    if(itm.id==id){
+                                    if(itm.id===id){
                                         state = true;
                                         return createListItem(itm, true);
                                     }
                                 }
-                                if(state==false){
+                                if(state===false){
                                     return createListItem(itm, false);
                                 }
                             })}

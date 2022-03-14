@@ -1,5 +1,4 @@
 import {default as date_module} from 'date-and-time';
-import axios from 'axios';
 import emailjs from '@emailjs/browser';
 import{ init } from '@emailjs/browser';
 init("user_TgsJoAAXIf4bThefY3KyB");
@@ -8,7 +7,7 @@ function getAdminDetails(id){
     let data = JSON.parse(localStorage.getItem('admin'));
     let admin;
     data.forEach(itm=>{
-        if(itm.id==id){
+        if(itm.id===id){
             admin = itm;
             return;
         }
@@ -61,7 +60,7 @@ function isSlotOverlap(st1, st2, et1, et2){
     // console.log(s1, e1, s2, e2);
 
     return (
-        (s1==s2 && e1==e2)
+        (s1===s2 && e1===e2)
         ||
         (s1>=s2 && e1<=e2)
         ||
@@ -77,7 +76,7 @@ function getInterveiwWithID(id){
     let interviews = JSON.parse(localStorage.getItem('interview'));
     for(let i=0;i<interviews.length;i++){
         let itm = interviews[i];
-        if(itm.id==id) return itm;
+        if(itm.id===id) return itm;
     }
 }
 
@@ -85,7 +84,7 @@ function getPatricipantWithID(id){
     let participant = JSON.parse(localStorage.getItem('participant'));
     for(let i=0;i<participant.length; i++){
         let itm = participant[i];
-        if(itm.id==id) return itm;
+        if(itm.id===id) return itm;
     }
 }
 
@@ -96,7 +95,7 @@ function isSlotsCollasping(id, date, st, et, update, updateID){
 
         // skip currently updating interview
         if(update){
-            if(updateID==id) return false;
+            if(updateID===id) return false;
         }
 
         let itm = getInterveiwWithID(id);
@@ -137,11 +136,12 @@ function getEmail(obj){
     let emails = []
     participant.map(itm=>{
         for(let i=0;i<selected.length; i++){
-            if(itm.id==selected[i]){
+            if(itm.id===selected[i]){
                 return emails.push(itm.email);
             }
                 
         }
+        return null;
     })
 
     emails.forEach(itm=>{
@@ -166,7 +166,7 @@ function updateSchedule(updateID, obj){
     obj.date = date_module.transform(obj.date, 'YYYY-MM-DD', 'DD-MM-YYYY');
     for(let i=0;i<interviews.length;i++){
         let id = interviews[i].id;
-        if(id==updateID){
+        if(id===updateID){
             interviews[i]=obj;
             break;
         }
