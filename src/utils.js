@@ -1,4 +1,5 @@
 import {default as date_module} from 'date-and-time';
+import axios from 'axios';
 import emailjs from '@emailjs/browser';
 import{ init } from '@emailjs/browser';
 init("user_TgsJoAAXIf4bThefY3KyB");
@@ -113,20 +114,22 @@ function isSlotsCollasping(id, date, st, et, update, updateID){
 }
 
 function sendMail(mail, date, st, et){
+    console.log(mail, date, st, et);
     let form = {
         to: mail,
         date: date,
         st: st,
-        et: et
+        et: et,
+        email: 'satvikjee1@gmail.com'
     }
-    emailjs.sendForm('service_8pxbrw8', 'template_9c9lqw3', form, 'user_TgsJoAAXIf4bThefY3KyB')
-      .then((result) => {
-          console.log(result.text);
-      }, (error) => {
-          console.log(error.text);
-      });
+
+    emailjs.send('service_r99hg0m', 'template_9c9lqw3', form)
+    .then(function(response) {
+       console.log('SUCCESS!', response.status, response.text);
+    }, function(error) {
+       console.log('FAILED...', error);
+    });
 }
-// sendMail('satviksingh35@gmail.com', '12-3-2022', '3:30 pm', '5:00 pm');
 
 function getEmail(obj){
     let participant = getParticipants();
@@ -134,12 +137,17 @@ function getEmail(obj){
     let emails = []
     participant.map(itm=>{
         for(let i=0;i<selected.length; i++){
-            if(itm.id==selected[i]) return emails.push(itm.email);
+            if(itm.id==selected[i]){
+                return emails.push(itm.email);
+            }
+                
         }
     })
 
     emails.forEach(itm=>{
-
+        setTimeout(()=>{
+            // sendMail(itm, obj.date, obj.startTime, obj.endTime);
+        }, 1500)
     })
 }
 

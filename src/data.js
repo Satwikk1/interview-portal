@@ -12,7 +12,7 @@ var data = {
     {
       id: 2,
       name: "dummy2",
-      email: "satviksingh35@gmail.com",
+      email: "satvikbits@gmail.com",
       interviewID: [
         1,
         3,
@@ -22,7 +22,7 @@ var data = {
     {
       id: 3,
       name: "dummy3",
-      email: "satviksingh35@gmail.com",
+      email: "gaugauritam311@gmail.com",
       interviewID: [
         1,
         3,
@@ -33,7 +33,7 @@ var data = {
     {
       id: 4,
       name: "dummy4",
-      email: "satviksingh35@gmail.com",
+      email: "e19cse241@bennett.edu.in",
       interviewID: [
         3
       ]
@@ -41,7 +41,7 @@ var data = {
     {
       id: 5,
       name: "dummy5",
-      email: "satviksingh35@gmail.com",
+      email: "e19cse124@bennett.edu.in",
       interviewID: [
         6
       ]
@@ -49,7 +49,7 @@ var data = {
     {
       id: 6,
       name: "dummy6",
-      email: "satviksingh35@gmail.com",
+      email: "e19cse223@bennett.edu.in",
       interviewID: [
         6
       ]
@@ -57,7 +57,7 @@ var data = {
     {
       id: 7,
       name: "dummy7",
-      email: "satviksingh35@gmail.com",
+      email: "e19cse225@bennett.edu.in",
       interviewID: [
         4
       ]
