@@ -146,7 +146,7 @@ function getEmail(obj){
 
     emails.forEach(itm=>{
         setTimeout(()=>{
-            // sendMail(itm, obj.date, obj.startTime, obj.endTime);
+            sendMail(itm, obj.date, obj.startTime, obj.endTime);
         }, 1500)
     })
 }
