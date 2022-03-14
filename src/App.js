@@ -31,6 +31,11 @@ import data from './data.js';
 let adminID = 1;
 var loaderHtml = (<div id="loader"></div>);
 
+function logLocalStorage(){
+    console.log(JSON.parse(localStorage.getItem('interview')))
+    console.log(JSON.parse(localStorage.getItem('participant')))
+}
+
 function App() {
 
         // state
@@ -66,6 +71,8 @@ function App() {
             if(localStorage.getItem('resume')===null){
                 localStorage.setItem('resume', JSON.stringify(data.resume))
             }
+
+            // logLocalStorage();
 
             let details = getAdminDetails(adminID);
             setAdminDetails(details);

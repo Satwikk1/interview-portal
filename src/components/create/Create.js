@@ -12,11 +12,11 @@ function Create(props) {
     function validate(name, email){
         if(name===''){
             toast.warn("name filed is empty!");
-            return;
+            return false;
         }
         if(email===''){
             toast.warn("email filed is empty!");
-            return;
+            return false;
         }
         let at = false;
         let dot = false;
@@ -26,8 +26,9 @@ function Create(props) {
         }
         if(!at || !dot){
             toast.warn('email format is not corrent!');
-            return;
+            return false;
         }
+        return true;
     }
 
     function handleSubmit(e){

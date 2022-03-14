@@ -17,8 +17,6 @@ function Schedule(props) {
     const [date, setDate] = useState('');
     const [st, setSt] = useState('');
     const [et, setEt] = useState('');
-
-
     
     function validateSubmit(){
         // validate number of participants
@@ -37,8 +35,20 @@ function Schedule(props) {
             let selected_st = date_module.parse(st, 'h:m:s');
             let selected_et = date_module.parse(et, 'h:m:s');
 
-            if(date_module.subtract(new Date(), selected_date).toDays()>=0){
-                toast.warn('you have selected past date!');
+            let now = new Date();
+            if(
+                now.getFullYear()<=selected_date.getFullYear()
+                &&
+                now.getMonth()<=selected_date.getMonth()
+                &&
+                now.getDate()<=selected_date.getDate()
+            ){}else{
+                toast.warn('You have selected a past date!');
+                return;
+            }
+
+            if(selected_et.getHours()<selected_st.getHours()){
+                toast.warn("cannot schedule meeting in reverse!");
                 return;
             }
 
@@ -47,11 +57,9 @@ function Schedule(props) {
             // check is participant is available at selected date and time
             let flag = true; // save to database if flag is true
 
-
-
             for(let i=0; i<selectedParticipants.length; i++){
                 let itm = selectedParticipants[i];
-                let check;
+                let check=true;
                 if(update){
                     check = props.isSlotsCollasping(itm, selected_date, selected_st, selected_et, true, updateID);
                 }else{
@@ -62,8 +70,6 @@ function Schedule(props) {
                     flag = false;
                 }
             }
-
-
 
             if(flag){
                 let obj = {
@@ -150,7 +156,6 @@ function Schedule(props) {
             </tr>
         )
     }
-    
     
     useEffect(()=>{
 

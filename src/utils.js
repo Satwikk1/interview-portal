@@ -50,7 +50,7 @@ function getScheduledInterviews(id){
     return interviewObjs;
 }
 
-function isSlotOverlap(st1, st2, et1, et2){
+function isSlotOverlap(st2, st1, et2, et1){
     let s1, s2, e1, e2;
     s1 = parseInt(date_module.format(st1, 'HH'))+(parseInt(date_module.format(st1, 'mm')))/60;
     s2 = parseInt(date_module.format(st2, 'HH'))+(parseInt(date_module.format(st2, 'mm')))/60;
@@ -59,17 +59,56 @@ function isSlotOverlap(st1, st2, et1, et2){
 
     // console.log(s1, e1, s2, e2);
 
-    return (
-        (s1===s2 && e1===e2)
-        ||
-        (s1>=s2 && e1<=e2)
-        ||
-        (s1<=s2 && e1>=e2)
-        ||
-        (s1>=s2 && s1<e2)
-        ||
-        (e1>s1 && e1<=e2)
-    )
+    let end = 23+(59/60);
+    // s1-> existing start time, e1->existing end time
+    // s2-> scheduling start time, e2->scheduling end time
+    // if all the points lies between 0 and 23:59
+    if(
+        s1>=0 && 
+        s2>=0 && 
+        e1>=0 && 
+        e2>=0 && 
+        s1<=end && 
+        s2<=end && 
+        e1<=end && 
+        e2<=end &&
+        ((s2<=s1 && e2<=s1) || (s2>=e1 && e2>=e1))
+    ){
+        return false;
+    }
+    // if in existing slot, end time goes beyond 23:59  -->e1       s1<--
+                                                    //  |               |
+                                                    //  -----------------
+    else if(
+        s1>e1 &&
+        s2>=e1 &&
+        e2>=e1 &&
+        s2<=s1 &&
+        e2<=s1
+    ){
+        return false;
+    }
+
+    // if scheduling slot goes beyond 23:59
+    else if(
+        s2>e2 &&
+        s2>=e1 &&
+        e2<=s1
+    ){
+        return false;
+    }
+    return true;
+    // return (
+    //     (s1===s2 && e1===e2)
+    //     ||
+    //     (s1>=s2 && e1<=e2)
+    //     ||
+    //     (s1<=s2 && e1>=e2)
+    //     ||
+    //     (s1>=s2 && s1<e2)
+    //     ||
+    //     (e1>s1 && e1<=e2)
+    // )
 }
 
 function getInterveiwWithID(id){
@@ -99,15 +138,12 @@ function isSlotsCollasping(id, date, st, et, update, updateID){
         }
 
         let itm = getInterveiwWithID(id);
+        // console.log(id);
         let itm_date = date_module.parse(itm.date, 'DD-MM-YYYY');
         let itm_st = date_module.parse(itm.startTime, 'h:m:s');
         let itm_et = date_module.parse(itm.endTime, 'h:m:s');
         if(date_module.isSameDay(date, itm_date)){
-            if(isSlotOverlap(st, itm_st, et, itm_et)){
-                return true;
-            }else{
-                return false;
-            }
+            return(isSlotOverlap(st, itm_st, et, itm_et))
         }
     }
 }
@@ -151,6 +187,20 @@ function getEmail(obj){
     })
 }
 
+function updateParticipantsOnInterviewUpdate(obj){
+    let participants = getParticipants();
+    for(let i=0; i<participants.length;i++){
+        let id = participants[i].id;
+        for(let j=0;j<obj.intervieweeID.length;j++){
+            let id2 = obj.intervieweeID[j];
+            if(id===id2){
+                participants[i].interviewID.push(obj.id);
+            }
+        }
+    }
+    localStorage.setItem('participant', JSON.stringify(participants));
+}
+
 function saveNewSchedule(obj){
     let interviews = getAllInterviews()
     obj.id = interviews.length+1;
@@ -158,6 +208,10 @@ function saveNewSchedule(obj){
     interviews.push(obj);
     localStorage.setItem('interview', JSON.stringify(interviews));
     getEmail(obj);
+
+    // update participant interviewID
+    updateParticipantsOnInterviewUpdate(obj);
+    
 }
 
 function updateSchedule(updateID, obj){
@@ -172,6 +226,8 @@ function updateSchedule(updateID, obj){
         }
     }
     localStorage.setItem('interview', JSON.stringify(interviews));
+
+    updateParticipantsOnInterviewUpdate(obj);
 }
 
 function saveParticipant(name, email){
