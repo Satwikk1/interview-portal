@@ -11,7 +11,6 @@ function handleEdit(id, props){
     frame.newSchedule = true;
     props.setNavFrame(frame);
 
-
     props.setOnEditId(id);
     props.setOnEdit(true);
 }
@@ -46,11 +45,57 @@ function createCard(interview, props){
     )
 }
 
+function printOptions(itm){
+    return <option value={itm.id}>{itm.name}</option>
+}
+
 
 function Home(props) {
 
+    const [participants, setParticipants] = useState(null);
+
+    useEffect(()=>{
+        let participant = props.getParticipants();
+        setParticipants(participant);
+    }, [])
+
+    function handleChange(e){
+        let id = e.target.value;
+        let scheduledInterviewss = [];
+        let scheduleID = [];
+        
+        for(let i=0; i<participants.length; i++){
+            if(participants[i].id==id){
+                scheduleID = participants[i].interviewID;
+                break;
+            }
+        }
+
+        var allInterviews = props.getAllInterviews();
+        console.log("scheduled id", scheduleID);
+        console.log(allInterviews)
+        scheduleID.forEach(itm=>{
+            for(let i=0; i<allInterviews.length; i++){
+                if(itm==allInterviews[i].id){
+                    scheduledInterviewss.push(allInterviews[i]);
+                    break;
+                }
+            }
+        })
+        console.log(scheduledInterviewss);
+        props.setScheduledInterviews(scheduledInterviewss);
+    }
+
     return ( 
         <div id="home-container">
+            <div>
+                <select onChange={handleChange}>
+                    <option selected>select name</option>
+                    {participants?
+                        participants.map((itm)=>printOptions(itm))
+                    :null}
+                </select>                
+            </div>
             <div className="card-columns">
                 {props.scheduledInterviews.map((itm)=>{return createCard(itm, props)})}
             </div>  

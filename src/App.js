@@ -10,7 +10,6 @@ import Participants from './components/participants/Participants.js';
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer } from 'react-toastify';
 
-// import './app.css';
 import {
     binarySearch,
     isSlotOverlap,
@@ -31,10 +30,6 @@ import data from './data.js';
 let adminID = 1;
 var loaderHtml = (<div id="loader"></div>);
 
-function logLocalStorage(){
-    console.log(JSON.parse(localStorage.getItem('interview')))
-    console.log(JSON.parse(localStorage.getItem('participant')))
-}
 
 function App() {
 
@@ -72,8 +67,6 @@ function App() {
                 localStorage.setItem('resume', JSON.stringify(data.resume))
             }
 
-            // logLocalStorage();
-
             let details = getAdminDetails(adminID);
             setAdminDetails(details);
             setDetailLoader(!detailLoader);
@@ -82,9 +75,8 @@ function App() {
             setScheduledInterviews(interviews);
             setInterviewCardLoader(!interviewCardLoader);
 
-            // print dummy data
-            // console.log(JSON.parse(localStorage.getItem('interview')));
-            // console.log(JSON.parse(localStorage.getItem('participant')));
+            console.log(JSON.parse(localStorage.getItem('participant')));
+
         }, []);
 
         return ( 
@@ -96,10 +88,13 @@ function App() {
                     :
                     navFrame.allSchedules?
                         <Home 
-                            setOnEdit={setOnEdit} 
+                            setOnEdit={setOnEdit}
+                            getAllInterviews={getAllInterviews}
+                            getParticipants={getParticipants}
                             setOnEditId={setOnEditId} 
                             navFrame={navFrame} 
                             setNavFrame={setNavFrame} 
+                            setScheduledInterviews={setScheduledInterviews}
                             scheduledInterviews={scheduledInterviews} 
                         />
                         :

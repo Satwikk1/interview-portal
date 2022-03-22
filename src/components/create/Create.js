@@ -7,7 +7,6 @@ function Create(props) {
 
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
-    // const [file, setFile] = useState('');
 
     function validate(name, email){
         if(name===''){
@@ -60,10 +59,6 @@ function Create(props) {
                     <label for="exampleInputEmail1">Email address</label>
                     <input value={email} onChange={(e)=>setEmail(e.target.value)} name="email" type="email" className="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email"/>
                 </div>
-                {/* <div className="form-group">
-                    <label for="resume">Upload resume </label>
-                    <input value={file} onChange={(e)=>setFile(e.target.value)} name="resume" type="file" className="form-control" id="resume"/>
-                </div> */}
                 <div className="form-group">
                     <button onClick={handleSubmit} className="btn btn-primary">Submit</button>
                 </div>

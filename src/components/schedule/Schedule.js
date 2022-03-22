@@ -19,7 +19,6 @@ function Schedule(props) {
     const [et, setEt] = useState('');
     
     function validateSubmit(){
-        // validate number of participants
         if(date===''){
             toast.warn('date field is empty!');
             return;
@@ -30,23 +29,31 @@ function Schedule(props) {
             toast.warn('end time filed is empty!');
             return;
         }
+        // validate number of participants
         if(selectedParticipants.length>=2){
             let selected_date = date_module.parse(date, 'YYYY-MM-DD');
             let selected_st = date_module.parse(st, 'h:m:s');
             let selected_et = date_module.parse(et, 'h:m:s');
 
+            // check is selected date is a past date
             let now = new Date();
-            if(
-                now.getFullYear()<=selected_date.getFullYear()
-                &&
-                now.getMonth()<=selected_date.getMonth()
-                &&
-                now.getDate()<=selected_date.getDate()
-            ){}else{
+            let flagg = false;
+            if(now.getFullYear()<=selected_date.getFullYear()){
+                flagg = true;
+            }else if( now.getMonth()<=selected_date.getMonth()){
+                flagg = true;
+            }else if( now.getDate()<=selected_date.getDate() && now.getMonth()>selected_date.getMonth()){
+                flagg = true;
+            }else if(now.getDate()<=selected_date.getDate() && now.getMonth()<=selected_date.getMonth()){
+                flagg = false;
+            }
+            if(!flagg){
+                console.log(now.getMonth(), selected_date.getMonth());
                 toast.warn('You have selected a past date!');
                 return;
             }
 
+            // check if the slot selected is in reverse order
             if(selected_et.getHours()<selected_st.getHours()){
                 toast.warn("cannot schedule meeting in reverse!");
                 return;
@@ -59,7 +66,7 @@ function Schedule(props) {
 
             for(let i=0; i<selectedParticipants.length; i++){
                 let itm = selectedParticipants[i];
-                let check=true;
+                let check=true; // flag
                 if(update){
                     check = props.isSlotsCollasping(itm, selected_date, selected_st, selected_et, true, updateID);
                 }else{
@@ -80,13 +87,14 @@ function Schedule(props) {
                     endTime: et
                 }
 
+                // navigation state update
                 let frame = {};
                 for (const [key, value] of Object.entries(props.navFrame)) {
                     frame[key] = false
                 }
                 frame.allSchedules = true;
-
                 props.setNavFrame(frame);
+
                 if(update){
                     props.updateSchedule(updateID, obj);
                 }else{
@@ -95,6 +103,7 @@ function Schedule(props) {
                 props.reloadInterviews();
 
             }else{
+                // notify participant name whose slot is collasped
                 let len=hasCollasped.length%6;
                 hasCollasped.sort();
                 for(let i=0;i<participants.length && len>=0; i++){
@@ -114,7 +123,6 @@ function Schedule(props) {
 
     function handleSubmit(){
         validateSubmit();
-        // console.log(selectedParticipants, date, st, et, update, props.onEditId, updateID);
     }
 
     function addSelectedParticipant(e, id){
@@ -174,13 +182,6 @@ function Schedule(props) {
             props.setOnEditId(null);
             setUpdate(true);
         }
-        
-        // return () => {
-        //     setDate('');
-        //     setSt('');
-        //     setEt('');
-        //     setSelectedParticipants([])
-        // }
 
     }, [])
 

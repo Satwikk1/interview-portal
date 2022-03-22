@@ -6,7 +6,6 @@ function createTableRow(data){
         <th scope="row">{data.id}</th>
         <td>{data.name}</td>
         <td>{data.email}</td>
-        {/* <td>{data.resume}</td> */}
     </tr>)
 }
 
@@ -18,7 +17,6 @@ function diaplayData(data){
                 <th scope="col">id</th>
                 <th scope="col">Name</th>
                 <th scope="col">Email</th>
-                {/* <th scope="col">resume</th> */}
             </tr>
         </thead>
         <tbody>
